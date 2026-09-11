@@ -1,0 +1,11 @@
+fastapi>=0.115
+uvicorn[standard]>=0.30
+yt-dlp>=2024.8.6
+pydantic>=2.7
+pydantic-settings>=2.3
+slowapi>=0.1.9
+sqlalchemy>=2.0
+python-multipart>=0.0.9
+# TiDB (MySQL compatible) — driver utilisé si DATABASE_URL=mysql+pymysql://...
+pymysql>=1.1
+# Cookies / proxy optionnels : aucune dépendance supplémentaire requise

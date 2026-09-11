@@ -1,0 +1,12 @@
+# Contexte de build minimal : seule app/ + requirements sont copiés,
+# mais exclure le reste accélère l'envoi du contexte et évite les fuites.
+.venv/
+__pycache__/
+*.pyc
+tmp/
+*.db
+*.sqlite*
+.env
+api_out.log
+api_err.log
+scripts/

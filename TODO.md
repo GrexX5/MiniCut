@@ -58,7 +58,7 @@
 - Validation : au déploiement Étape 7 (build Koyeb + `/health` 200).
 
 ## Étape 7 — Déploiement & sécurisation (Rapport §2/§3) [>]
-- [x] Pré-requis git : repo initialisé + commit initial `a5c60bc` (50 fichiers, `.env`/`*.db`/`node_modules` exclus) — reste push GitHub
+- [x] Pré-requis git : repo initialisé + push `https://github.com/GrexX5/MiniCut` branche `main` (50 fichiers, `.env`/`*.db`/`node_modules` exclus) ✅ 2026-09-13
 - [ ] TiDB Serverless : `DATABASE_URL` MySQL, tables créées
 - [ ] Koyeb : service `backend/`, port 8000, `/health`, vars d'env prod
 - [ ] Vercel : projet `frontend/`, `NEXT_PUBLIC_API_URL` → Koyeb
@@ -76,4 +76,4 @@
 - 2026-09-11 (Étape 4 auto) : backend + `npm run dev` en jobs, page `/` 16 Ko ("Mini Cut", "Analyser"). E2E navigateur à faire manuellement.
 - 2026-09-11 (Étape 5) : 5/5 OK (quota 429, rate-limit 10+429, TTL). Fix purge partiels en échec + tests idempotents.
 - 2026-09-11 (Étape 6) : Dockerfile revu + `.dockerignore` + HEALTHCHECK. Build local abandonné → Koyeb depuis git.
-- 2026-09-11 (Étape 7 démarrée, ordre TiDB→Koyeb→Vercel→Clerk) : `git init` + commit initial `a5c60bc` (50 fichiers). En attente : URLs TikTok/Instagram pour finir Étape 2 + création repo GitHub pour push.
+- 2026-09-13 (Étape 7, push GitHub OK) : `gh` installé, `auth login` GrexX5, branche `master`→`main`, `gh repo create MiniCut --public --push` → `https://github.com/GrexX5/MiniCut`. Prochaine : TiDB→Koyeb→Vercel→Clerk. Reste Étape 2 : URLs TikTok/Instagram pour PoC filigrane.

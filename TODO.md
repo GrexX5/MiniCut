@@ -59,7 +59,7 @@
 
 ## Étape 7 — Déploiement & sécurisation (Rapport §2/§3) [>]
 - [x] Pré-requis git : repo initialisé + push `https://github.com/GrexX5/MiniCut` branche `main` (50 fichiers, `.env`/`*.db`/`node_modules` exclus) ✅ 2026-09-13
-- [ ] TiDB Serverless : `DATABASE_URL` MySQL, tables créées
+- [x] TiDB Serverless : `DATABASE_URL` MySQL, tables créées (`download_jobs`, `quota_usage` via `init_db()`) ✅ 2026-09-13 — URL simplifiée `mysql+pymysql://.../minicut` (SSL auto dans `quotas.py`), DB `minicut` créée
 - [ ] Koyeb : service `backend/`, port 8000, `/health`, vars d'env prod
 - [ ] Vercel : projet `frontend/`, `NEXT_PUBLIC_API_URL` → Koyeb
 - [ ] Clerk : login + envoi `x-user-id`, quota gratuit OK

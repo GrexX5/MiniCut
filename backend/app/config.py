@@ -15,7 +15,8 @@ class Settings(BaseSettings):
     FRONTEND_ORIGINS: str = "http://localhost:3000"
 
     # DB : SQLite en local, TiDB Serverless en prod.
-    # Ex TiDB : mysql+pymysql://user:password@gateway01.eu-central-1.prod.aws.tidbcloud.com:4000/minicut?ssl_ca=/etc/ssl/certs/ca-certificates.crt&ssl_verify_cert=true
+    # Ex TiDB : mysql+pymysql://user:password@gateway01.eu-central-1.prod.aws.tidbcloud.com:4000/minicut
+    # (SSL auto ajouté par quotas.py, pas de `?ssl=` dans l'URL).
     DATABASE_URL: str = "sqlite:///./minicut.db"
 
     # Stockage temporaire des .mp4

@@ -12,10 +12,22 @@ from ..config import get_settings
 from ..models import Base, QuotaUsage
 
 _settings = get_settings()
+
+
+def _connect_args_for(url: str) -> dict:
+    if url.startswith("sqlite"):
+        return {"check_same_thread": False}
+    if url.startswith("mysql+pymysql"):
+        # TiDB Serverless exige SSL. `ssl={"ssl": True}` validé le 2026-09-13
+        # (pymysql attend un dict, pas un bool). Pas de `?ssl=...` dans l'URL.
+        return {"ssl": {"ssl": True}}
+    return {}
+
+
 engine = create_engine(
     _settings.DATABASE_URL,
     pool_pre_ping=True,
-    connect_args={"check_same_thread": False} if _settings.DATABASE_URL.startswith("sqlite") else {},
+    connect_args=_connect_args_for(_settings.DATABASE_URL),
 )
 SessionLocal = sessionmaker(bind=engine, expire_on_commit=False)
 

@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: minicut-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: ENV
+        value: prod
+      - key: TMP_DIR
+        value: /app/tmp
+      - key: FILE_TTL_SECONDS
+        value: 600
+      - key: MAX_CLIP_DURATION
+        value: 300
+      - key: DAILY_QUOTA_ANON
+        value: 1
+      - key: DAILY_QUOTA_FREE
+        value: 10
+      - key: DATABASE_URL
+        sync: false # mysql+pymysql://USER:PASS@gateway01.eu-central-1.prod.aws.tidbcloud.com:4000/minicut
+      - key: FRONTEND_ORIGINS
+        sync: false # https://<front>.vercel.app (à compléter après Vercel)

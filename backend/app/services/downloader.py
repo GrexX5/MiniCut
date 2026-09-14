@@ -28,6 +28,12 @@ from ..utils.timeparse import format_seconds_to_hms
 
 def _base_ydl_opts(extra: dict[str, Any] | None = None) -> dict[str, Any]:
     s = get_settings()
+    # 720p max en MVP : divise RAM/CPU/disque par 2-4 vs 4K (crucial sur 512MB).
+    ydl_format = (
+        "bv*[height<=720][ext=mp4]+ba[ext=m4a]"
+        "/b[height<=720][ext=mp4]"
+        "/bv*[ext=mp4]+ba/b"
+    )
     opts: dict[str, Any] = {
         "quiet": True,
         "no_warnings": True,
@@ -35,7 +41,12 @@ def _base_ydl_opts(extra: dict[str, Any] | None = None) -> dict[str, Any]:
         "socket_timeout": 20,
         "retries": 3,
         "fragment_retries": 3,
-        "concurrent_fragment_downloads": 4,
+        # Instance gratuite 512MB (Render/Railway) : 2 fragments max en parallèle
+        # (4 OOM le container au démarrage du download, constaté 2026-09-14).
+        "concurrent_fragment_downloads": 2,
+        # MVP : 720p max => 2-4x moins de RAM/CPU/disque qu'en 4K, suffisant
+        # pour des extraits courts. Fallback sans limite si aucun flux ≤720p.
+        "format": ydl_format,
         # Anti bot-check YouTube sur IP datacenter (Render) : on tente le player
         # web d'abord (formats complets, OK avec cookies), fallback android
         # (contourne souvent le "Sign in to confirm you're not a bot").
@@ -168,7 +179,6 @@ def download_clip(
         opts = _base_ydl_opts(
             {
                 "outtmpl": partial_template,
-                "format": "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b",
                 "merge_output_format": "mp4",
                 "download_ranges": yt_dlp.utils.download_range_func(None, [(start, end)]),
                 "download_sections": [_section_str(start, end)],
@@ -224,7 +234,6 @@ def download_clip(
     opts = _base_ydl_opts(
         {
             "outtmpl": full_template,
-            "format": "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b",
             "merge_output_format": "mp4",
             "progress_hooks": [_hook],
         }

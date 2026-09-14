@@ -18,6 +18,24 @@ limiter = Limiter(key_func=get_remote_address)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
+    # Les jobs sont suivis en mémoire : après un crash/restart (fréquent sur
+    # instance gratuite 512MB), les lignes restées "queued"/"processing" en DB
+    # ne finiront jamais => les marquer en erreur avec un message relançable.
+    try:
+        from sqlalchemy import update
+
+        from .models import DownloadJob
+        from .services.quotas import SessionLocal
+
+        with SessionLocal() as db:
+            db.execute(
+                update(DownloadJob)
+                .where(DownloadJob.status.in_(["queued", "processing"]))
+                .values(status="error", error="Redémarrage serveur pendant le traitement, relance ta découpe.")
+            )
+            db.commit()
+    except Exception:
+        pass
     purge_expired_tmp()
     yield
 

@@ -63,7 +63,7 @@
 - [x] Render (remplace Koyeb HS/Mistral 2026) : Blueprint `render.yaml`, Docker `backend/`, `/health` 200 ✅ 2026-09-14 — `https://minicut-api.onrender.com` live (`env: prod`, TiDB OK). Fix URL `mysql://`→`mysql+pymysql://`.
 - [x] Vercel : `https://mini-cut.vercel.app/` live (`NEXT_PUBLIC_API_URL=https://minicut-api.onrender.com`) ✅ 2026-09-14 — reste à confirmer `FRONTEND_ORIGINS` côté Render (CORS prod strict)
 - [ ] Clerk : login + envoi `x-user-id`, quota gratuit OK
-- [>] Anti IP-ban YouTube (bloquant prod, Rapport §6) : cookies posés mais insuffisants (`Sign in to confirm you're not a bot` / `Failed to extract any player response` malgré clients tv/web/android + yt-dlp 2026.8.19). Pistes : vérifier chemin secret `/etc/secrets/youtube_cookies.txt` + `YTDLP_COOKIES_FILE`, ré-exporter cookies, ou PO-token provider / proxy résidentiel (`PROXY_URL` déjà câblé).
+- [>] Anti IP-ban YouTube (bloquant prod, Rapport §6) : cookies lus OK depuis `d5dbac6` (copie TMP_DIR, fix `OSError Errno 30` read-only qui masquait tout) mais YouTube rejette la session (`Sign in...` persiste → cookies expirés/invalidés ou PO-token requis). Pistes : ré-exporter cookies frais, ou PO-token provider / proxy résidentiel (`PROXY_URL` déjà câblé).
 - Validation : E2E prod **Instagram OK** (reel → info → job done → MP4 720p h264/aac 10.000s 2.78 Mo) ; YouTube prod KO ; TikTok à tester.
 
 ## Journal

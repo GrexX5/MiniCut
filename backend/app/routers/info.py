@@ -1,4 +1,6 @@
 """POST /api/info — PRD §3.2 : métadonnées instantanées (titre, miniature, durée)."""
+import logging
+
 from fastapi import APIRouter, Request
 from pydantic import BaseModel, Field
 from slowapi import Limiter
@@ -28,6 +30,8 @@ def fetch_info(payload: InfoRequest, request: Request):
     except ValueError as e:
         return {"ok": False, "error": str(e)}
     except Exception:
+        # Loggé (visible dans les logs Render) au lieu d'être avalé en silence.
+        logging.getLogger("minicut.info").exception("get_metadata inattendu pour %s", payload.url)
         return {"ok": False, "error": "Service vidéo temporairement indisponible, réessaie."}
     if meta.get("is_live"):
         return {"ok": False, "error": "Les lives ne sont pas supportés en MVP."}

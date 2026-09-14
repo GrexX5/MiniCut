@@ -68,7 +68,10 @@ def get_metadata(url: str) -> dict[str, Any]:
     try:
         with yt_dlp.YoutubeDL(_base_ydl_opts({"skip_download": True})) as ydl:
             info = ydl.extract_info(url, download=False)
-    except yt_dlp.utils.DownloadError as e:
+    except (yt_dlp.utils.DownloadError, yt_dlp.utils.ExtractorError) as e:
+        # Sœurs (pas mère-fille) dans yt-dlp récent : attraper les deux.
+        # Couvre les erreurs extracteur non wrappées (ex: challenge TikTok
+        # sur IP datacenter, constaté 2026-09-14 en prod).
         raise ValueError(f"Impossible de lire cette vidéo ({source}) : {e}") from e
     if info is None:
         raise ValueError("Vidéo introuvable ou privée.")
@@ -241,7 +244,7 @@ def download_clip(
     try:
         with yt_dlp.YoutubeDL(opts) as ydl:
             ydl.download([url])
-    except yt_dlp.utils.DownloadError as e:
+    except (yt_dlp.utils.DownloadError, yt_dlp.utils.ExtractorError) as e:
         raise RuntimeError(f"Téléchargement impossible (IP-ban ? cookies ?). Détail : {e}") from e
 
     candidates = sorted(tmp.glob(f"{job_id}_full.*"))

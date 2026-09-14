@@ -61,7 +61,7 @@
 - [x] Pré-requis git : repo initialisé + push `https://github.com/GrexX5/MiniCut` branche `main` (50 fichiers, `.env`/`*.db`/`node_modules` exclus) ✅ 2026-09-13
 - [x] TiDB Serverless : `DATABASE_URL` MySQL, tables créées (`download_jobs`, `quota_usage` via `init_db()`) ✅ 2026-09-13 — URL simplifiée `mysql+pymysql://.../minicut` (SSL auto dans `quotas.py`), DB `minicut` créée
 - [x] Render (remplace Koyeb HS/Mistral 2026) : Blueprint `render.yaml`, Docker `backend/`, `/health` 200 ✅ 2026-09-14 — `https://minicut-api.onrender.com` live (`env: prod`, TiDB OK). Fix URL `mysql://`→`mysql+pymysql://`.
-- [x] Vercel : `https://mini-cut.vercel.app/` live (`NEXT_PUBLIC_API_URL=https://minicut-api.onrender.com`) ✅ 2026-09-14 — reste à confirmer `FRONTEND_ORIGINS` côté Render (CORS prod strict)
+- [x] Vercel : `https://mini-cut.vercel.app/` live (`NEXT_PUBLIC_API_URL=https://minicut-api.onrender.com`) + CORS prod vérifié ✅ 2026-09-14 — `OPTIONS /api/info` 200 avec `allow-origin: https://mini-cut.vercel.app`
 - [ ] Clerk : login + envoi `x-user-id`, quota gratuit OK
 - [>] Anti IP-ban YouTube (bloquant prod, Rapport §6) : cookies lus OK depuis `d5dbac6` (copie TMP_DIR, fix `OSError Errno 30` read-only qui masquait tout) mais YouTube rejette la session (`Sign in...` persiste → cookies expirés/invalidés ou PO-token requis). Pistes : ré-exporter cookies frais, ou PO-token provider / proxy résidentiel (`PROXY_URL` déjà câblé).
 - Validation : E2E prod **Instagram OK** (reel → info → job done → MP4 720p h264/aac 10.000s 2.78 Mo) ; YouTube prod KO ; TikTok à tester.

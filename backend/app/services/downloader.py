@@ -47,11 +47,11 @@ def _base_ydl_opts(extra: dict[str, Any] | None = None) -> dict[str, Any]:
         # MVP : 720p max => 2-4x moins de RAM/CPU/disque qu'en 4K, suffisant
         # pour des extraits courts. Fallback sans limite si aucun flux ≤720p.
         "format": ydl_format,
-        # Anti bot-check YouTube sur IP datacenter (Render) : on tente le player
-        # web d'abord (formats complets, OK avec cookies), fallback android
-        # (contourne souvent le "Sign in to confirm you're not a bot").
-        # Cookies via YTDLP_COOKIES_FILE (plan B déjà câblé ci-dessous).
-        "extractor_args": {"youtube": {"player_client": ["web", "android"]}},
+        # Anti bot-check YouTube sur IP datacenter (Render) : client tv d'abord
+        # (endpoint TVHTML5, historiquement le moins filtré), puis web
+        # (formats complets, OK avec cookies) et android en dernier recours.
+        # Cookies via YTDLP_COOKIES_FILE (déjà câblé ci-dessous).
+        "extractor_args": {"youtube": {"player_client": ["tv", "web", "android"]}},
     }
     if s.YTDLP_COOKIES_FILE:
         opts["cookiefile"] = s.YTDLP_COOKIES_FILE

@@ -60,7 +60,7 @@
 ## Étape 7 — Déploiement & sécurisation (Rapport §2/§3) [>]
 - [x] Pré-requis git : repo initialisé + push `https://github.com/GrexX5/MiniCut` branche `main` (50 fichiers, `.env`/`*.db`/`node_modules` exclus) ✅ 2026-09-13
 - [x] TiDB Serverless : `DATABASE_URL` MySQL, tables créées (`download_jobs`, `quota_usage` via `init_db()`) ✅ 2026-09-13 — URL simplifiée `mysql+pymysql://.../minicut` (SSL auto dans `quotas.py`), DB `minicut` créée
-- [ ] Render (remplace Koyeb HS/Mistral 2026) : Blueprint `render.yaml`, Docker `backend/`, `/health`, vars prod (`ENV`, `TMP_DIR`, `DATABASE_URL` TiDB sans `?ssl=`)
+- [x] Render (remplace Koyeb HS/Mistral 2026) : Blueprint `render.yaml`, Docker `backend/`, `/health` 200 ✅ 2026-09-14 — `https://minicut-api.onrender.com` live (`env: prod`, TiDB OK). Fix URL `mysql://`→`mysql+pymysql://`.
 - [ ] Vercel : projet `frontend/`, `NEXT_PUBLIC_API_URL` → Koyeb
 - [ ] Clerk : login + envoi `x-user-id`, quota gratuit OK
 - [ ] Anti IP-ban : `YTDLP_COOKIES_FILE` / `PROXY_URL` si blocage YouTube

@@ -61,10 +61,10 @@
 - [x] Pré-requis git : repo initialisé + push `https://github.com/GrexX5/MiniCut` branche `main` (50 fichiers, `.env`/`*.db`/`node_modules` exclus) ✅ 2026-09-13
 - [x] TiDB Serverless : `DATABASE_URL` MySQL, tables créées (`download_jobs`, `quota_usage` via `init_db()`) ✅ 2026-09-13 — URL simplifiée `mysql+pymysql://.../minicut` (SSL auto dans `quotas.py`), DB `minicut` créée
 - [x] Render (remplace Koyeb HS/Mistral 2026) : Blueprint `render.yaml`, Docker `backend/`, `/health` 200 ✅ 2026-09-14 — `https://minicut-api.onrender.com` live (`env: prod`, TiDB OK). Fix URL `mysql://`→`mysql+pymysql://`.
-- [ ] Vercel : projet `frontend/`, `NEXT_PUBLIC_API_URL` → Koyeb
+- [x] Vercel : `https://mini-cut.vercel.app/` live (`NEXT_PUBLIC_API_URL=https://minicut-api.onrender.com`) ✅ 2026-09-14 — reste à confirmer `FRONTEND_ORIGINS` côté Render (CORS prod strict)
 - [ ] Clerk : login + envoi `x-user-id`, quota gratuit OK
-- [ ] Anti IP-ban : `YTDLP_COOKIES_FILE` / `PROXY_URL` si blocage YouTube
-- Validation : parcours complet en production sur les 3 sources.
+- [>] Anti IP-ban YouTube (bloquant prod, Rapport §6) : cookies posés mais insuffisants (`Sign in to confirm you're not a bot` / `Failed to extract any player response` malgré clients tv/web/android + yt-dlp 2026.8.19). Pistes : vérifier chemin secret `/etc/secrets/youtube_cookies.txt` + `YTDLP_COOKIES_FILE`, ré-exporter cookies, ou PO-token provider / proxy résidentiel (`PROXY_URL` déjà câblé).
+- Validation : E2E prod **Instagram OK** (reel → info → job done → MP4 720p h264/aac 10.000s 2.78 Mo) ; YouTube prod KO ; TikTok à tester.
 
 ## Journal
 - 2026-09-10 : scaffolding MVP terminé, build front OK, imports backend corrigés.
@@ -76,4 +76,4 @@
 - 2026-09-11 (Étape 4 auto) : backend + `npm run dev` en jobs, page `/` 16 Ko ("Mini Cut", "Analyser"). E2E navigateur à faire manuellement.
 - 2026-09-11 (Étape 5) : 5/5 OK (quota 429, rate-limit 10+429, TTL). Fix purge partiels en échec + tests idempotents.
 - 2026-09-11 (Étape 6) : Dockerfile revu + `.dockerignore` + HEALTHCHECK. Build local abandonné → Koyeb depuis git.
-- 2026-09-13 (Étape 7, push GitHub OK) : `gh` installé, `auth login` GrexX5, branche `master`→`main`, `gh repo create MiniCut --public --push` → `https://github.com/GrexX5/MiniCut`. Prochaine : TiDB→Koyeb→Vercel→Clerk. Reste Étape 2 : URLs TikTok/Instagram pour PoC filigrane.
+- 2026-09-14 (Étape 7, prod live) : backend `https://minicut-api.onrender.com` (`/health` prod, TiDB OK) + front `https://mini-cut.vercel.app/`. OOM 512MB fixé (720p max, 2 fragments, jobs stale→error au boot) — E2E Insta prod OK (MP4 10s 2.78 Mo vérifié ffprobe). YouTube prod bloqué bot-check malgré cookies (piste PO-token/proxy). Reste : CORS `FRONTEND_ORIGINS`, TikTok test, Clerk.

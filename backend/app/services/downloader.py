@@ -36,11 +36,11 @@ def _base_ydl_opts(extra: dict[str, Any] | None = None) -> dict[str, Any]:
         "retries": 3,
         "fragment_retries": 3,
         "concurrent_fragment_downloads": 4,
-        # Anti bot-check YouTube sur IP datacenter (Render) : le client android
-        # contourne souvent le "Sign in to confirm you're not a bot" du player web.
-        # Validé local 2026-09-14 (Big Buck Bunny OK). Cookies via
-        # YTDLP_COOKIES_FILE restent le plan B (déjà câblé ci-dessous).
-        "extractor_args": {"youtube": {"player_client": ["android"]}},
+        # Anti bot-check YouTube sur IP datacenter (Render) : on tente le player
+        # web d'abord (formats complets, OK avec cookies), fallback android
+        # (contourne souvent le "Sign in to confirm you're not a bot").
+        # Cookies via YTDLP_COOKIES_FILE (plan B déjà câblé ci-dessous).
+        "extractor_args": {"youtube": {"player_client": ["web", "android"]}},
     }
     if s.YTDLP_COOKIES_FILE:
         opts["cookiefile"] = s.YTDLP_COOKIES_FILE

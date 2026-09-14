@@ -26,6 +26,29 @@ from .detector import detect_source
 from ..utils.timeparse import format_seconds_to_hms
 
 
+def _writable_cookiefile(src: str) -> str | None:
+    """Copie le fichier cookies vers TMP_DIR inscriptible et retourne la copie.
+
+    yt-dlp réécrit le cookiefile à la fermeture du contexte (`save_cookies`) :
+    les Secret Files Render sont montés en lecture seule (`OSError: Errno 30`),
+    ce qui faisait échouer TOUTES les requêtes (constaté 2026-09-14).
+    Retourne None si la source est illisible (on continue sans cookies).
+    """
+    from pathlib import Path as _Path
+
+    settings = get_settings()
+    origin = _Path(src)
+    if not origin.is_file():
+        return None
+    try:
+        dst = settings.tmp_path / "youtube_cookies.txt"
+        if not dst.exists() or origin.stat().st_mtime > dst.stat().st_mtime:
+            shutil.copy(origin, dst)
+        return str(dst)
+    except OSError:
+        return None
+
+
 def _base_ydl_opts(extra: dict[str, Any] | None = None) -> dict[str, Any]:
     s = get_settings()
     # 720p max en MVP : divise RAM/CPU/disque par 2-4 vs 4K (crucial sur 512MB).
@@ -54,7 +77,9 @@ def _base_ydl_opts(extra: dict[str, Any] | None = None) -> dict[str, Any]:
         "extractor_args": {"youtube": {"player_client": ["tv", "web", "android"]}},
     }
     if s.YTDLP_COOKIES_FILE:
-        opts["cookiefile"] = s.YTDLP_COOKIES_FILE
+        writable = _writable_cookiefile(s.YTDLP_COOKIES_FILE)
+        if writable:
+            opts["cookiefile"] = writable
     if s.PROXY_URL:
         opts["proxy"] = s.PROXY_URL
     if extra:
